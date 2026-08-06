@@ -209,8 +209,8 @@ export default function Home() {
           </div>
 
           {/* RIGHT — Automated Animated Hero Carousel (Styled Frame & Corners, Banner Below) */}
-          <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', padding: '10px 0 15px', zIndex: 3 }}>
-            <div style={{
+          <div className="hero-carousel-col" style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', padding: '10px 0 15px', zIndex: 3 }}>
+            <div className="hero-carousel-frame" style={{
               position: 'relative',
               width: '94%',
               height: 520,
@@ -219,7 +219,8 @@ export default function Home() {
               background: 'linear-gradient(135deg, var(--olive-dark) 0%, #303A22 100%)',
               border: '2px solid rgba(201, 162, 75, 0.5)',
               boxShadow: '0 10px 25px -3px rgba(30, 38, 20, 0.45), 0 35px 75px -12px rgba(22, 29, 14, 0.6), 0 0 35px rgba(201, 162, 75, 0.35), inset 0 2px 5px rgba(255, 255, 255, 0.25), inset 0 -6px 15px rgba(0, 0, 0, 0.55)',
-              padding: '7px'
+              padding: '7px',
+              flexShrink: 0
             }}>
               <div style={{
                 width: '100%',
@@ -263,8 +264,9 @@ export default function Home() {
             </div>
 
             {/* Green Banner Line - Positioned Directly BELOW the Image Frame */}
-            <div style={{
+            <div className="hero-banner-box" style={{
               width: '94%',
+              height: 'auto',
               background: 'linear-gradient(135deg, var(--olive-dark) 0%, #303A22 100%)',
               border: '1px solid rgba(201, 162, 75, 0.5)',
               padding: '12px 24px',
@@ -274,10 +276,12 @@ export default function Home() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              flexWrap: 'wrap',
               gap: 12,
               margin: '16px 0 10px',
               zIndex: 5,
-              transition: 'all 0.5s ease'
+              transition: 'all 0.5s ease',
+              flexShrink: 0
             }}>
               <span style={{ fontSize: 13, fontWeight: 700, color: '#FAF6EE', letterSpacing: '0.04em' }}>
                 {heroSlides[currentSlide]?.badge || '🌿 100% Organic & Clean'}

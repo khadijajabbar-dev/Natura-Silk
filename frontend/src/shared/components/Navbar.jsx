@@ -13,7 +13,6 @@ export default function Navbar() {
   const logoImage = useSetting('logoImage', '/images/logo.png');
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchVal, setSearchVal] = useState('');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { count: wishCount } = useWishlist();
 
@@ -26,50 +25,37 @@ export default function Navbar() {
     }
   }
 
-  const mobileLinkStyle = {
-    fontSize: '16px',
-    fontWeight: '600',
-    color: 'var(--olive-dark)',
-    padding: '10px 14px',
-    borderRadius: '8px',
-    background: 'var(--white)',
-    border: '1px solid var(--line)',
-    textDecoration: 'none',
-    display: 'block',
-    transition: 'all 0.2s ease',
-  };
-
   return (
     <>
       {/* Main Navbar */}
       <header className="navbar">
-        <div className="container" style={{ position: 'relative' }}>
+        <div className="container">
           {/* Logo */}
-          <Link to="/" className="logo" style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <Link to="/" className="logo" style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             {logoImage && (
               <img
                 src={logoImage}
                 alt=""
-                style={{ height: 52, width: 'auto', objectFit: 'contain' }}
+                style={{ height: 64, width: 'auto', objectFit: 'contain' }}
                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
             )}
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <span style={{ fontSize: 'clamp(24px, 5vw, 32px)', fontFamily: 'var(--font-display)', fontWeight: 600, color: 'var(--olive-dark)', lineHeight: 1.05, letterSpacing: '0.01em' }}>
+              <span style={{ fontSize: 32, fontFamily: 'var(--font-display)', fontWeight: 600, color: 'var(--olive-dark)', lineHeight: 1.05, letterSpacing: '0.01em' }}>
                 {brandName}
               </span>
-              <span style={{ fontSize: 9.5, fontFamily: 'var(--font-body)', letterSpacing: '0.14em', color: 'var(--olive)', fontWeight: 600, marginTop: 4 }}>
+              <span style={{ fontSize: 10, fontFamily: 'var(--font-body)', letterSpacing: '0.16em', color: 'var(--olive)', fontWeight: 600, marginTop: 4 }}>
                 {brandTagline.toUpperCase().replace(/\. /g, ' · ').replace(/\.$/, '')}
               </span>
             </div>
           </Link>
 
-          {/* Nav links (Desktop & Laptop) */}
+          {/* Nav links */}
           <nav className="nav-links">
             <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>Home</NavLink>
             <div className="nav-dropdown">
               <NavLink to="/shop" className={({ isActive }) => isActive ? 'active' : ''}>
-                Shop
+                Shop <span style={{ fontSize: 10 }}></span>
               </NavLink>
             </div>
             <NavLink to="/about" className={({ isActive }) => isActive ? 'active' : ''}>About Us</NavLink>
@@ -81,12 +67,12 @@ export default function Navbar() {
           {/* Icons */}
           <div className="nav-icons">
             {/* Wishlist */}
-            <Link to="/wishlist" className="icon-btn hide-mobile-tiny" aria-label="Wishlist" title="Wishlist">
+            <Link to="/wishlist" className="icon-btn" aria-label="Wishlist">
               <HeartIcon />
               {wishCount > 0 && <span className="cart-badge">{wishCount}</span>}
             </Link>
             {/* Cart */}
-            <Link to="/cart" className="icon-btn" aria-label="Cart" title="Cart">
+            <Link to="/cart" className="icon-btn" aria-label="Cart">
               <CartIcon />
               {count > 0 && <span className="cart-badge">{count}</span>}
             </Link>
@@ -98,7 +84,7 @@ export default function Navbar() {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 6,
+                gap: 7,
                 padding: '6px 12px',
                 borderRadius: 20,
                 textDecoration: 'none',
@@ -111,60 +97,10 @@ export default function Navbar() {
               }}
             >
               <UserIcon />
-              <span className="auth-btn-text">{user ? user.name.split(' ')[0] : 'Login'}</span>
+              <span>{user ? user.name.split(' ')[0] : 'Login'}</span>
             </Link>
-            {/* Hamburger Button (Mobile & Tablet) */}
-            <button
-              className="icon-btn hamburger-btn"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle Navigation Menu"
-              style={{ background: 'var(--cream-deep)', border: '1px solid var(--line)', borderRadius: '8px', padding: '6px 10px' }}
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--olive-dark)" strokeWidth="2.2" strokeLinecap="round">
-                {mobileMenuOpen ? (
-                  <path d="M18 6 6 18M6 6l12 12" />
-                ) : (
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
-            </button>
           </div>
         </div>
-
-        {/* Mobile Hamburger Navigation Drawer */}
-        {mobileMenuOpen && (
-          <div className="mobile-nav-drawer" style={{
-            background: 'var(--cream)',
-            borderBottom: '2px solid var(--olive)',
-            padding: '20px 24px',
-            boxShadow: '0 15px 35px rgba(44,53,32,0.18)',
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            right: 0,
-            zIndex: 200,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-            animation: 'fadeIn 0.2s ease-out',
-          }}>
-            <NavLink to="/" onClick={() => setMobileMenuOpen(false)} style={mobileLinkStyle}>Home</NavLink>
-            <NavLink to="/shop" onClick={() => setMobileMenuOpen(false)} style={mobileLinkStyle}>Shop All</NavLink>
-            <NavLink to="/about" onClick={() => setMobileMenuOpen(false)} style={mobileLinkStyle}>About Us</NavLink>
-            <NavLink to="/ingredients" onClick={() => setMobileMenuOpen(false)} style={mobileLinkStyle}>Our Ingredients</NavLink>
-            <NavLink to="/blog" onClick={() => setMobileMenuOpen(false)} style={mobileLinkStyle}>Blog Articles</NavLink>
-            <NavLink to="/contact" onClick={() => setMobileMenuOpen(false)} style={mobileLinkStyle}>Contact Us</NavLink>
-            <hr style={{ border: 'none', borderTop: '1px solid var(--line)', margin: '4px 0' }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
-              <Link to="/wishlist" onClick={() => setMobileMenuOpen(false)} className="btn btn-outline btn-sm" style={{ flex: 1, textAlign: 'center', justifyContent: 'center' }}>
-                ❤️ Wishlist ({wishCount})
-              </Link>
-              <Link to="/cart" onClick={() => setMobileMenuOpen(false)} className="btn btn-primary btn-sm" style={{ flex: 1, textAlign: 'center', justifyContent: 'center' }}>
-                🛍️ Cart ({count})
-              </Link>
-            </div>
-          </div>
-        )}
 
         {/* Search bar dropdown */}
         {searchOpen && (
