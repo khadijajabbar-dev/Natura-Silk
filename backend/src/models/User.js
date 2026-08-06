@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
     passwordHash: { type: String, required: true },
     phone: { type: String, default: null },
     address: { type: String, default: null },
+    role: { type: String, default: 'customer' },
   },
   { timestamps: { createdAt: 'created_at', updatedAt: false } }
 );
