@@ -123,6 +123,7 @@ import adminRoutes from './routes/adminRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
 import blogRoutes from './routes/blogRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -143,6 +144,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found.' });

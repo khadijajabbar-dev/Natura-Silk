@@ -4,7 +4,7 @@ import { signToken } from '../utils/jwt.js';
 import { serializeUser } from '../utils/serializers.js';
 
 export async function signup(req, res) {
-  const { name, email, password } = req.body;
+  const { name, email, password, phone, role } = req.body;
 
   if (!name || !name.trim()) return res.status(400).json({ error: 'Please enter your name.' });
   if (!email || !/^\S+@\S+\.\S+$/.test(email)) return res.status(400).json({ error: 'Please enter a valid email address.' });
@@ -14,9 +14,15 @@ export async function signup(req, res) {
   if (existing) return res.status(409).json({ error: 'An account with this email already exists.' });
 
   const passwordHash = bcrypt.hashSync(password, 10);
-  const user = await User.create({ name: name.trim(), email: email.toLowerCase(), passwordHash });
+  const user = await User.create({
+    name: name.trim(),
+    email: email.toLowerCase(),
+    passwordHash,
+    phone: phone || null,
+    role: role === 'seller' ? 'seller' : 'customer',
+  });
 
-  const token = signToken({ id: user._id.toString(), email: user.email, name: user.name });
+  const token = signToken({ id: user._id.toString(), email: user.email, name: user.name, role: user.role });
   res.status(201).json({ token, user: serializeUser(user) });
 }
 
@@ -29,7 +35,7 @@ export async function login(req, res) {
     return res.status(401).json({ error: 'Incorrect email or password.' });
   }
 
-  const token = signToken({ id: user._id.toString(), email: user.email, name: user.name });
+  const token = signToken({ id: user._id.toString(), email: user.email, name: user.name, role: user.role || 'customer' });
   res.json({ token, user: serializeUser(user) });
 }
 

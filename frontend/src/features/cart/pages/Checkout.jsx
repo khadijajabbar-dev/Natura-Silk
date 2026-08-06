@@ -1,23 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import client from '../../../shared/api/client';
 import { useCart } from '../hooks/CartContext';
+import { useAuth } from '../../auth/hooks/AuthContext';
 
 const SHIPPING_FEE = 200;
 const FREE_SHIPPING_THRESHOLD = 2000;
 
 export default function Checkout() {
+  const { user } = useAuth() || { user: null };
   const { items, subtotal, refreshCart } = useCart();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    shipping_name: '',
-    shipping_email: '',
-    shipping_phone: '',
-    shipping_address: '',
+    shipping_name: user?.name || '',
+    shipping_email: user?.email || '',
+    shipping_phone: user?.phone || '',
+    shipping_address: user?.address || '',
     shipping_city: '',
     payment_method: 'cod',
   });
+
+  useEffect(() => {
+    if (user) {
+      setForm((f) => ({
+        ...f,
+        shipping_name: f.shipping_name || user.name || '',
+        shipping_email: f.shipping_email || user.email || '',
+        shipping_phone: f.shipping_phone || user.phone || '',
+        shipping_address: f.shipping_address || user.address || '',
+      }));
+    }
+  }, [user]);
   const [error, setError] = useState('');
   const [placing, setPlacing] = useState(false);
 
@@ -55,7 +69,49 @@ export default function Checkout() {
 
   return (
     <div className="container section">
-      <h1 style={{ fontSize: 30, marginBottom: 28 }}>Checkout</h1>
+      <h1 style={{ fontSize: 30, marginBottom: 20 }}>Checkout</h1>
+
+      {!user ? (
+        <div style={{
+          background: 'var(--cream)',
+          border: '1px solid var(--line)',
+          borderRadius: 12,
+          padding: '16px 22px',
+          marginBottom: 28,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: 14,
+        }}>
+          <div>
+            <span style={{ fontWeight: 700, color: 'var(--olive-dark)', fontSize: 15 }}>✨ You are checking out as a guest — no account required!</span>
+            <p style={{ fontSize: 13.5, color: 'var(--ink-soft)', marginTop: 4 }}>
+              Anyone can complete purchases without signing up. If you already have an account, you can login to autofill your delivery details.
+            </p>
+          </div>
+          <Link to="/login" style={{ padding: '9px 20px', borderRadius: 24, background: 'var(--olive)', color: 'white', fontSize: 13.5, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap', boxShadow: '0 2px 8px rgba(44,53,32,0.15)' }}>
+            Login / Register →
+          </Link>
+        </div>
+      ) : (
+        <div style={{
+          background: '#DCFCE7',
+          border: '1px solid #86EFAC',
+          color: '#166534',
+          borderRadius: 12,
+          padding: '14px 20px',
+          marginBottom: 28,
+          fontSize: 14,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          fontWeight: 500,
+        }}>
+          <span>👤 Logged in as <strong>{user.name}</strong> ({user.email}). We've automatically pre-filled your saved shipping details!</span>
+        </div>
+      )}
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 40, alignItems: 'flex-start' }}>
         <form onSubmit={handlePlaceOrder} style={{ background: 'white', border: '1px solid var(--line)', borderRadius: 6, padding: 26 }}>
           {error && <div className="form-error">{error}</div>}

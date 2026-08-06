@@ -23,8 +23,8 @@ export function AuthProvider({ children }) {
     return res.data.user;
   }, []);
 
-  const signup = useCallback(async (name, email, password) => {
-    const res = await client.post('/auth/signup', { name, email, password });
+  const signup = useCallback(async (name, email, phone, password, role) => {
+    const res = await client.post('/auth/signup', { name, email, phone, password, role });
     localStorage.setItem('haircare_token', res.data.token);
     setUser(res.data.user);
     return res.data.user;

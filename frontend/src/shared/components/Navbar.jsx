@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { useCart } from '../../features/cart/hooks/CartContext';
 import { useWishlist } from '../../features/wishlist/hooks/WishlistContext';
 import { useSetting } from '../hooks/SiteSettingsContext.jsx';
+import { useAuth } from '../../features/auth/hooks/AuthContext.jsx';
 
 export default function Navbar() {
+  const { user } = useAuth() || { user: null };
   const { count } = useCart();
   const brandName = useSetting('brandName', 'HairCare');
   const brandTagline = useSetting('brandTagline', 'Nourish. Grow. Glow.');
@@ -74,6 +76,29 @@ export default function Navbar() {
               <CartIcon />
               {count > 0 && <span className="cart-badge">{count}</span>}
             </Link>
+            {/* User Auth Link */}
+            <Link
+              to={user ? "/profile" : "/login"}
+              className="icon-btn"
+              aria-label="Account"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 7,
+                padding: '6px 12px',
+                borderRadius: 20,
+                textDecoration: 'none',
+                background: user ? 'var(--cream-deep)' : 'rgba(46, 75, 52, 0.08)',
+                border: '1px solid var(--line)',
+                color: 'var(--olive-dark)',
+                fontWeight: 600,
+                fontSize: 13,
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <UserIcon />
+              <span>{user ? user.name.split(' ')[0] : 'Login'}</span>
+            </Link>
           </div>
         </div>
 
@@ -132,6 +157,13 @@ function HeartIcon() {
   return (
     <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
       <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
+    </svg>
+  );
+}
+function UserIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
     </svg>
   );
 }

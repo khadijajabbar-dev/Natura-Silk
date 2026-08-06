@@ -18,6 +18,10 @@ const client = axios.create({ baseURL: '/api' });
 
 client.interceptors.request.use((config) => {
   config.headers['x-guest-id'] = getOrCreateGuestId();
+  const token = localStorage.getItem('haircare_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 

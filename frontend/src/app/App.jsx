@@ -51,6 +51,7 @@ import { wishlistRoutes } from '../features/wishlist/routes';
 import { ordersRoutes } from '../features/orders/routes';
 import { blogRoutes } from '../features/blog/routes';
 import { adminRoutes } from '../features/admin/routes';
+import { authRoutes } from '../features/auth/routes';
 
 export default function App() {
   const location = useLocation();
@@ -70,6 +71,7 @@ export default function App() {
           {ordersRoutes}
           {blogRoutes}
           {adminRoutes}
+          {authRoutes}
           {notFoundRoute}
         </Routes>
       </main>

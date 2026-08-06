@@ -86,3 +86,16 @@ export function serializeOrderItem(i) {
     quantity: i.quantity,
   };
 }
+
+export function serializeUser(u) {
+  if (!u) return null;
+  return {
+    id: u._id.toString(),
+    name: u.name,
+    email: u.email,
+    phone: u.phone || null,
+    address: u.address || null,
+    role: u.role || 'customer',
+    created_at: u.created_at,
+  };
+}
