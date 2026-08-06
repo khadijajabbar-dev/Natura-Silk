@@ -389,12 +389,6 @@ p { line-height: 1.65; color: var(--ink-soft); margin: 0; }
 .empty-state h3 { margin-bottom: 8px; }
 .empty-state p { margin-bottom: 24px; }
 
-@media (max-width: 860px) {
-  .nav-links { display: none; }
-  .grid-2 { grid-template-columns: 1fr; gap: 32px; }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-}
-
 /* Hide scrollbar for bestsellers horizontal scroll */
 #bs-scroll::-webkit-scrollbar { display: none; }
 
@@ -404,21 +398,9 @@ p { line-height: 1.65; color: var(--ink-soft); margin: 0; }
 /* Footer newsletter input */
 footer input::placeholder { color: rgba(255,255,255,0.55); }
 
-/* Nav dropdown hover */
+/* Nav dropdown hover & hamburger button */
 .nav-dropdown { position: relative; }
-
-@media (max-width: 1024px) {
-  .footer-grid-4 { grid-template-columns: 1fr 1fr !important; }
-}
-@media (max-width: 860px) {
-  .nav-links { display: none; }
-  .grid-2 { grid-template-columns: 1fr; gap: 32px; }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .hero-grid { grid-template-columns: 1fr !important; }
-  .cat-grid { grid-template-columns: repeat(3,1fr) !important; }
-  .ing-grid { grid-template-columns: repeat(3,1fr) !important; }
-  .insta-grid { grid-template-columns: repeat(3,1fr) !important; }
-}
+.hamburger-btn { display: none !important; }
 
 /* ---------- Blog page ---------- */
 .blog-layout { display: flex; gap: 40px; align-items: flex-start; }
@@ -480,16 +462,6 @@ footer input::placeholder { color: rgba(255,255,255,0.55); }
 }
 .blog-sidebar { width: 220px; flex-shrink: 0; }
 
-@media (max-width: 860px) {
-  .blog-layout { flex-direction: column; }
-  .blog-sidebar { width: 100%; }
-}
-@media (max-width: 640px) {
-  .blog-grid { grid-template-columns: 1fr; }
-  .blog-related-grid { grid-template-columns: 1fr !important; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; row-gap: 24px; }
-}
-
 /* Ingredient modal — visible side scrollbar for long descriptions */
 .ingredient-modal-scroll {
   scrollbar-width: thin;
@@ -507,4 +479,147 @@ footer input::placeholder { color: rgba(255,255,255,0.55); }
 }
 .ingredient-modal-scroll::-webkit-scrollbar-thumb:hover {
   background: var(--olive);
+}
+
+/* ==========================================================================
+   ADVANCED RESPONSIVE DESIGN SYSTEM (LAPTOP, TABLET, MOBILE)
+   ========================================================================== */
+
+/* --- LAPTOP / MEDIUM SCREENS (max-width: 1100px) --- */
+@media (max-width: 1100px) {
+  .hero-grid {
+    grid-template-columns: 340px 1fr !important;
+    gap: 16px !important;
+    padding: 0 20px !important;
+  }
+  .promo-grid { gap: 20px !important; }
+  .why-choose-grid { gap: 36px !important; }
+  .footer-grid { grid-template-columns: 1.2fr 1fr 1fr 1fr !important; gap: 24px !important; }
+}
+
+/* --- TABLET (max-width: 880px) --- */
+@media (max-width: 880px) {
+  /* Navigation */
+  .nav-links { display: none !important; }
+  .hamburger-btn { display: flex !important; }
+  .auth-btn-text { display: none !important; } /* Icon-only to save header space */
+  .hide-mobile-tiny { display: none !important; }
+  
+  /* Hero Section */
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    padding: 0 18px !important;
+    text-align: center;
+  }
+  .hero-text-col {
+    padding: 24px 10px 10px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .hero-text-col p {
+    max-width: 540px !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Promo & Why Choose */
+  .promo-grid {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+    gap: 28px !important;
+  }
+  .promo-images {
+    order: -1;
+  }
+  .why-choose-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+  
+  /* Layout Grids */
+  .grid-2 { grid-template-columns: 1fr !important; gap: 32px !important; }
+  .testimonials-grid,
+  .home-blog-grid,
+  .blog-grid,
+  .cat-grid,
+  .ing-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .insta-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    row-gap: 24px !important;
+  }
+  .blog-layout { flex-direction: column !important; }
+  .blog-sidebar { width: 100% !important; }
+}
+
+/* --- MOBILE & SMALL TABLET (max-width: 640px) --- */
+@media (max-width: 640px) {
+  .container {
+    padding: 0 16px !important;
+  }
+  .navbar .container {
+    height: 76px !important;
+  }
+  
+  /* Typography Auto-Scaling */
+  h1, .hero-headline {
+    font-size: clamp(28px, 7.5vw, 36px) !important;
+  }
+  h2 {
+    font-size: clamp(23px, 6vw, 28px) !important;
+  }
+  
+  /* Single Column Transformations */
+  .testimonials-grid,
+  .home-blog-grid,
+  .why-choose-features-grid,
+  .blog-grid,
+  .blog-related-grid,
+  .cat-grid,
+  .ing-grid,
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  
+  /* Instagram Phone Display (2-column photo gallery) */
+  .insta-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  
+  /* Hero Carousel Mobile Fit */
+  .hero-grid > div:last-child {
+    padding: 10px 0 !important;
+  }
+  .hero-grid > div:last-child > div {
+    height: 420px !important;
+    width: 100% !important;
+  }
+  
+  /* Newsletter & Footer Bottom Stacking */
+  .newsletter-row,
+  .footer-bottom {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 16px !important;
+  }
+  .newsletter-form {
+    flex-direction: column !important;
+    max-width: 100% !important;
+    gap: 10px !important;
+  }
+  .newsletter-form input,
+  .newsletter-form button {
+    border-radius: var(--radius) !important;
+    width: 100% !important;
+  }
 }

@@ -48,6 +48,7 @@ export default function BlogsManager() {
     if (!content || content.length === 0) return '';
     return content.map((b) => {
       if (b.type === 'h') return `## ${b.text}`;
+      if (b.type === 'highlight' || b.type === 'callout') return `>> ${b.text}`;
       if (b.type === 'img') return `![${b.caption || 'Blog Image'}](${b.src || b.text})`;
       return b.text;
     }).join('\n\n');
@@ -56,12 +57,16 @@ export default function BlogsManager() {
   // Parse text back into content blocks
   function textToContent(text) {
     if (!text.trim()) return [];
-    return text.split('\n\n')
+    // Automatically split by ANY line break (\n, \r\n, or multiple newlines) so every line becomes a clean paragraph!
+    return text.split(/\r?\n+/)
       .map((line) => line.trim())
       .filter(Boolean)
       .map((line) => {
         if (line.startsWith('## ')) {
           return { type: 'h', text: line.replace(/^## /, '') };
+        }
+        if (line.startsWith('>> ') || line.startsWith('> ') || line.toLowerCase().startsWith('highlight:')) {
+          return { type: 'highlight', text: line.replace(/^(>>?|highlight:)\s*/i, '') };
         }
         const imgMatch = line.match(/^!\[(.*?)\]\((.*?)\)$/);
         if (imgMatch) {
@@ -262,25 +267,50 @@ export default function BlogsManager() {
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                 <label style={{ ...labelStyle, marginBottom: 0 }}>
-                  Content
-                  <span style={{ fontWeight: 400, color: 'var(--ink-soft)', marginLeft: 8 }}>
-                    (New paragraph = blank line. Start line with <code>## </code> for heading)
-                  </span>
+                  Content <span style={{ fontSize: 11, fontWeight: 400, color: 'var(--ink-soft)' }}>(Every line break creates a new paragraph)</span>
                 </label>
-                <button
-                  type="button"
-                  onClick={() => contentFileInputRef.current?.click()}
-                  disabled={uploadingContentImg}
-                  style={{
-                    padding: '4px 10px', borderRadius: 6, border: '1px solid var(--olive)',
-                    background: 'white', color: 'var(--olive-dark)', fontSize: 12, fontWeight: 700,
-                    cursor: uploadingContentImg ? 'default' : 'pointer',
-                  }}
-                >
-                  {uploadingContentImg ? 'Uploading Image...' : '🖼 Upload Image to Content'}
-                </button>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // Break large dense text into distinct paragraphs automatically every ~3 sentences
+                      const formatted = contentText
+                        .replace(/\.([ ]+)([A-Z])/g, (m, p, c) => (Math.random() < 0.4 ? `.\n\n${c}` : m));
+                      setContentText(formatted);
+                    }}
+                    style={{ padding: '4px 8px', borderRadius: 5, border: '1px solid var(--line)', background: '#F4F1EA', color: 'var(--olive-dark)', fontSize: 11.5, fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    ⚡ Auto-Break Paragraphs
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setContentText((prev) => prev + (prev.endsWith('\n') ? '' : '\n\n') + '>> Highlight: Write your key pro tip or highlighted note here...')}
+                    style={{ padding: '4px 8px', borderRadius: 5, border: '1px solid rgba(201, 162, 75, 0.6)', background: '#FAF6EE', color: 'var(--olive-dark)', fontSize: 11.5, fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    ✨ Add Highlight Box
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setContentText((prev) => prev + ' ==Highlighted Text== ')}
+                    style={{ padding: '4px 8px', borderRadius: 5, border: '1px solid #E6B800', background: '#FFF7CC', color: '#5C4700', fontSize: 11.5, fontWeight: 700, cursor: 'pointer' }}
+                  >
+                    🟨 Add Yellow Highlight
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => contentFileInputRef.current?.click()}
+                    disabled={uploadingContentImg}
+                    style={{
+                      padding: '4px 10px', borderRadius: 5, border: '1px solid var(--olive)',
+                      background: 'white', color: 'var(--olive-dark)', fontSize: 11.5, fontWeight: 700,
+                      cursor: uploadingContentImg ? 'default' : 'pointer',
+                    }}
+                  >
+                    {uploadingContentImg ? 'Uploading...' : '🖼 Upload Image'}
+                  </button>
+                </div>
                 <input
                   ref={contentFileInputRef}
                   type="file"
@@ -292,8 +322,8 @@ export default function BlogsManager() {
               <textarea
                 value={contentText}
                 onChange={(e) => setContentText(e.target.value)}
-                style={{ ...inputStyle, minHeight: 240, resize: 'vertical', fontFamily: 'monospace', fontSize: 13 }}
-                placeholder={`Write your blog content here...\n\n## This becomes a heading\n\nThis becomes a paragraph.\n\n![Image Caption](/images/uploads/filename.jpg)`}
+                style={{ ...inputStyle, minHeight: 280, resize: 'vertical', fontFamily: 'inherit', fontSize: 14, lineHeight: 1.6 }}
+                placeholder={`Write or paste your article here...\n\nEvery time you press ENTER on a new line, it automatically formats into a clean separated paragraph!\n\nUse >> at the start of a line for an elegant green/gold Highlighted Box.\nWrap words in ==like this== for a highlighted text effect!`}
               />
             </div>
 

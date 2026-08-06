@@ -83,6 +83,41 @@ export default function Home() {
     client.get('/blogs').then((r) => setHomeBlogs(r.data.blogs.slice(0, 3)));
   }, []);
 
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const defaultHeroSlides = [
+    {
+      img: heroImage || '/images/combo-hero.jpg',
+      badge: '🌿 100% Organic & Clean',
+      tagline: 'Crafted For Both — Him & Her',
+    },
+    {
+      img: '/images/hero_couple.png',
+      badge: '✨ Natural Synergy',
+      tagline: 'Shared Luxury For Him & Her',
+    },
+    {
+      img: '/images/hero_woman.png',
+      badge: '💧 Deep Shine & Softness',
+      tagline: 'Silky Radiance & Strength For Her',
+    },
+    {
+      img: '/images/hero_man.png',
+      badge: '💪 Root Fortified Vitality',
+      tagline: 'Active Density & Care For Him',
+    }
+  ];
+  const heroSlides = allSettings?.heroSliderImages && allSettings.heroSliderImages.length > 0
+    ? allSettings.heroSliderImages
+    : defaultHeroSlides;
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
+
   return (
     <div>
 
@@ -106,13 +141,13 @@ export default function Home() {
         </div>
 
         {/* Main hero grid */}
-        <div style={{
-          maxWidth: 1240, margin: '0 auto', padding: '0 48px',
+        <div className="hero-grid" style={{
+          maxWidth: 1240, margin: '0 auto', padding: '0 32px',
           display: 'grid', gridTemplateColumns: '380px 1fr',
-          alignItems: 'center', minHeight: 520, gap: 0,
+          alignItems: 'center', minHeight: 520, gap: '20px',
         }}>
           {/* LEFT — text content */}
-          <div style={{ padding: '60px 0 60px', zIndex: 2 }}>
+          <div className="hero-text-col" style={{ padding: '40px 0 40px', zIndex: 2 }}>
             <span style={{
               fontSize: 12.5, letterSpacing: '0.15em', textTransform: 'uppercase',
               fontWeight: 700, color: 'var(--olive-mid)',
@@ -173,21 +208,84 @@ export default function Home() {
             </div>
           </div>
 
-          {/* RIGHT — hero photo (products + model, as designed) */}
-          <div style={{ position: 'relative', height: 520, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+          {/* RIGHT — Automated Animated Hero Carousel (Styled Frame & Corners, Banner Below) */}
+          <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', padding: '10px 0 15px', zIndex: 3 }}>
             <div style={{
-              position: 'absolute', bottom: 0, right: 0,
-              width: '100%', height: '100%',
-              zIndex: 2,
+              position: 'relative',
+              width: '94%',
+              height: 520,
+              overflow: 'hidden',
+              borderRadius: 36,
+              background: 'linear-gradient(135deg, var(--olive-dark) 0%, #303A22 100%)',
+              border: '2px solid rgba(201, 162, 75, 0.5)',
+              boxShadow: '0 10px 25px -3px rgba(30, 38, 20, 0.45), 0 35px 75px -12px rgba(22, 29, 14, 0.6), 0 0 35px rgba(201, 162, 75, 0.35), inset 0 2px 5px rgba(255, 255, 255, 0.25), inset 0 -6px 15px rgba(0, 0, 0, 0.55)',
+              padding: '7px'
             }}>
-              <img
-                src={heroImage}
-                alt="HairCare natural hair care products"
-                style={{
-                  width: '100%', height: '100%',
-                  objectFit: 'contain', objectPosition: 'bottom center',
-                }}
-              />
+              <div style={{
+                width: '100%',
+                height: '100%',
+                position: 'relative',
+                borderRadius: 30,
+                overflow: 'hidden',
+                background: '#FAF6EE'
+              }}>
+                {heroSlides.map((slide, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      zIndex: currentSlide === index ? 2 : 1,
+                      opacity: currentSlide === index ? 1 : 0,
+                      transform: currentSlide === index ? 'scale(1)' : 'scale(1.04)',
+                      transition: 'opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 1.4s ease-out',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <img
+                      src={slide.img}
+                      alt={slide.tagline}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'top center',
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Green Banner Line - Positioned Directly BELOW the Image Frame */}
+            <div style={{
+              width: '94%',
+              background: 'linear-gradient(135deg, var(--olive-dark) 0%, #303A22 100%)',
+              border: '1px solid rgba(201, 162, 75, 0.5)',
+              padding: '12px 24px',
+              borderRadius: 30,
+              color: 'white',
+              boxShadow: '0 8px 24px rgba(44, 53, 32, 0.25)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 12,
+              margin: '16px 0 10px',
+              zIndex: 5,
+              transition: 'all 0.5s ease'
+            }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#FAF6EE', letterSpacing: '0.04em' }}>
+                {heroSlides[currentSlide]?.badge || '🌿 100% Organic & Clean'}
+              </span>
+              <span style={{ color: '#C9A24B', fontWeight: 800 }}>•</span>
+              <span style={{ fontSize: 12.5, color: '#C9A24B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                {heroSlides[currentSlide]?.tagline || 'CRAFTED FOR BOTH — HIM & HER'}
+              </span>
             </div>
           </div>
         </div>
@@ -336,7 +434,7 @@ export default function Home() {
         background: 'linear-gradient(120deg, #F0EAD8 0%, #E8DFCC 50%, #EAE0C8 100%)',
         padding: '56px 0', overflow: 'hidden',
       }}>
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: 40 }}>
+        <div className="container promo-grid" style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: 40 }}>
           <div>
             <div style={{
               display: 'inline-block', background: '#FF0000', color: 'white',
@@ -357,7 +455,7 @@ export default function Home() {
               {promoCtaText.toUpperCase()} →
             </Link>
           </div>
-          <div style={{ display: 'flex', gap: 14, alignItems: 'flex-end', justifyContent: 'center' }}>
+          <div className="promo-images" style={{ display: 'flex', gap: 14, alignItems: 'flex-end', justifyContent: 'center' }}>
             {[
               { src: promoImage1, h: 175 },
               { src: promoImage2, h: 225 },
@@ -386,7 +484,7 @@ export default function Home() {
 
       {/* ── WHY CHOOSE ───────────────────────────────────────── */}
       <section className="section" style={{ background: 'var(--white)' }}>
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
+        <div className="container why-choose-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 64, alignItems: 'center' }}>
           {/* Left — woman + argan oil image composite */}
           <div style={{ position: 'relative' }}>
             <div style={{
@@ -448,7 +546,7 @@ export default function Home() {
             <p style={{ fontSize: 14.5, marginBottom: 32, maxWidth: 380, lineHeight: 1.7 }}>
               {whyChooseDescription}
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 36 }}>
+            <div className="why-choose-features-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 36 }}>
               {whyChooseFeatures.map(({ icon, title, desc }) => (
                 <div key={title} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                   <div style={{
@@ -533,7 +631,7 @@ export default function Home() {
           }}>
             {testimonialsHeading}
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
+          <div className="testimonials-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24 }}>
             {testimonialsList.map((t) => (
               <div key={t.name} style={{
                 background: 'var(--cream)', border: '1px solid var(--line)',
@@ -585,7 +683,7 @@ export default function Home() {
             <Link to="/blog" style={{ fontSize: 13, fontWeight: 600, color: 'var(--olive)', textDecoration: 'none' }}>View All Articles →</Link>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, alignItems: 'stretch' }}>
+          <div className="home-blog-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, alignItems: 'stretch' }}>
             {homeBlogs.map((post) => (
               <Link key={post.id || post.slug} to={`/blog/${post.slug}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', height: '100%' }}>
                 <div style={{
@@ -636,7 +734,7 @@ export default function Home() {
             <a href={instagramUrl} target="_blank" rel="noreferrer" style={{ fontSize: 14, color: 'var(--ink-soft)', textDecoration: 'none' }}>{instagramHandle}</a>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 14 }}>
+          <div className="insta-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 14 }}>
             {instagramImages.map((src, i) => (
               <a key={i} href={instagramUrl} target="_blank" rel="noreferrer" style={{
                 display: 'block', aspectRatio: '1', overflow: 'hidden', borderRadius: 10, position: 'relative',

@@ -101,7 +101,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 40, paddingBottom: 40 }}>
+          <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr', gap: 40, paddingBottom: 40 }}>
 
             {/* Col 1 — Logo + desc + social */}
             <div>

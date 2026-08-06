@@ -279,6 +279,12 @@ export const DEFAULT_SETTINGS = {
   heroDescription: 'Discover the power of nature with our premium hair care products. Made with love, backed by science.',
   heroCtaText: 'Shop Now',
   heroImage: '/images/combo-hero.jpg',
+  heroSliderImages: [
+    { img: '/images/combo-hero.jpg', badge: '🌿 100% Organic & Clean', tagline: 'Crafted For Both — Him & Her' },
+    { img: '/images/hero_couple.png', badge: '✨ Natural Synergy', tagline: 'Shared Luxury For Him & Her' },
+    { img: '/images/hero_woman.png', badge: '💧 Deep Shine & Softness', tagline: 'Silky Radiance & Strength For Her' },
+    { img: '/images/hero_man.png', badge: '💪 Root Fortified Vitality', tagline: 'Active Density & Care For Him' },
+  ],
 
   promoHeadline: 'Stronger Roots,\nLonger Hair,\nBetter You.',
   promoReasonText: '🎉 New Brand Alert! To celebrate our launch, the first 100 customers get 20% off our entire product range.',
@@ -407,7 +413,15 @@ export const SETTINGS_FIELDS = [
   { key: 'heroHeadline', label: 'Headline', group: 'Hero', type: 'textarea', hint: 'Use a new line for a line break' },
   { key: 'heroDescription', label: 'Description', group: 'Hero', type: 'textarea' },
   { key: 'heroCtaText', label: 'Button Text', group: 'Hero', type: 'text' },
-  { key: 'heroImage', label: 'Hero Photo', group: 'Hero', type: 'image' },
+  { key: 'heroImage', label: 'Hero Photo (Fallback)', group: 'Hero', type: 'image' },
+  {
+    key: 'heroSliderImages', label: 'Hero Animated Slider Banners (Add / Delete / Update)', group: 'Hero', type: 'repeater',
+    itemFields: [
+      { key: 'img', label: 'Banner Photo', type: 'image' },
+      { key: 'badge', label: 'Badge Text (e.g. 🌿 100% Organic & Clean)', type: 'text' },
+      { key: 'tagline', label: 'Tagline (e.g. Crafted For Both — Him & Her)', type: 'text' },
+    ],
+  },
 
   { key: 'promoHeadline', label: 'Headline', group: 'Promo Banner', type: 'textarea', hint: 'Use a new line for a line break' },
   { key: 'promoReasonText', label: 'Offer Reason (why the sale is on)', group: 'Promo Banner', type: 'textarea', hint: 'e.g. why you\'re running this sale — new brand, limited customers, etc.' },
